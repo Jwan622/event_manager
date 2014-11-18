@@ -4,6 +4,10 @@ require_relative '../lib/data_cleaner'
 require_relative '../lib/messages'
 require_relative '../lib/entry'
 
+#basically, after we type load, we load the file name into a session object. When we do session.load_file,
+# we map through the whole CSv which is an array of array of strings, and convert it into an array of hashes which have
+# values. the hashes have values are cleaned and stripped.
+
 class Session
   attr_reader :filename, :contents, :queue, :messages, :data_cleaner
 

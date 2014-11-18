@@ -1,8 +1,10 @@
 class Entry
+# basically, after we type load, the data is passed into sessions which cleans the data. The clean data is then passed to Entry
+# so we create new Entry objects. Every hash gets passed into an Entry and so a new Entry object is created for every hash/row.
 
   attr_reader :first_name, :last_name, :email_address, :zipcode, :city, :state, :street, :home_phone
   def initialize(data)
-    @id             = data[0]
+    @id             = data[0]   # I think this should be data[:id]
     @reg_date       = data[:regdate]
     @first_name     = data[:first_name]
     @last_name      = data[:last_name]

@@ -9,7 +9,7 @@ class DataCleaner
   end
 
   def clean_state(state)
-    if state = nil || state = ""
+    if state == nil || state == ""
       "state not given"
     else
       state.strip[0..1]
@@ -17,10 +17,10 @@ class DataCleaner
   end
 
   def clean_street(street)
-    if street = nil || street = ""
+    if street == nil || street == ""
       "street not given"
     else
-      street.strip
+      street.downcase.strip.gsub(/\s+/, "")
     end
   end
 end

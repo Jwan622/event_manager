@@ -1,15 +1,15 @@
-require 'csv'
-require 'time'
-require_relative '../lib/data_cleaner'
-require_relative '../lib/messages'
-require_relative '../lib/entry'
+require 'csv'                           # => true
+require 'time'                          # => true
+require_relative '../lib/data_cleaner'  # => true
+require_relative '../lib/messages'      # => true
+require_relative '../lib/entry'         # => true
 
 #basically, after we type load, we load the file name into a session object. When we do session.load_file,
 # we map through the whole CSv which is an array of array of strings, and convert it into an array of hashes which have
 # values. the hashes have values are cleaned and stripped.
 
 class Session
-  attr_reader :filename, :contents, :queue, :messages, :data_cleaner
+  attr_reader :filename, :contents, :queue, :messages, :data_cleaner  # => nil
 
   def initialize(filename)
     @filename     = filename
@@ -21,7 +21,7 @@ class Session
 
   def load_file
     data = CSV.open(filename, headers: true, header_converters: :symbol)
-    @contents = data.map do |row|
+    @contents = data.map do |row|  #so @contents is an array of Entry objects. The last thing in the map enumerable gets returned which is an Entry object. content on the otherhand is a single hash everytime it loops.
       content                 = {}
       content[:id]            = row[0]
       content[:regdate]       = Time.strptime(row[:regdate], "%m/%d/%y %H:%M")
@@ -32,13 +32,14 @@ class Session
       content[:state]         = data_cleaner.clean_state(row[:state])
       content[:street]        = data_cleaner.clean_street(row[:street])
       content[:zipcode]       = data_cleaner.clean_zipcode(row[:zipcode])
+
       Entry.new(content)
     end
   end
 
-  def find(attribute, criteria)
-    @queue = contents.select do |entry|
-      entry.send(attribute).downcase == criteria.strip.downcase
+  def find(attribute, criteria) #so attribute is coming in as a string. contents is an array of Entries.
+    @queue = contents.select do |entry| #we then add the entries where the condition is true. @queue is an array of objects
+      entry.send(attribute).downcase == criteria.strip.downcase #what's going on is that we're calling the attribute method on entry object.
     end
   end
 
@@ -50,13 +51,14 @@ class Session
     tsv = messages.tsv_header
     queue.each do |entry|
       tsv += "\n" + entry.to_array.join("\t")
+      require 'pry', binding.pry
     end
     tsv
   end
 
   def sorted_queue_to_tsv(attribute)
     tsv = messages.tsv_header
-    queue.sort_by { |e| e.send(attribute) }.each do |entry|
+    queue.sort_by { |e| e.send(attribute) }.each do |entry|   #queue is an array of objects.
       tsv += "\n" + entry.to_array.join("\t")
     end
     tsv
@@ -68,12 +70,8 @@ class Session
       queue.each do |entry|
         csv << entry.to_array
       end
+      csv
     end
   end
 
 end
-
-# session = Session.new("../event_attendees.csv")
-# session.load_file
-# session.find(:zipcode, "20011")
-# puts session.queue

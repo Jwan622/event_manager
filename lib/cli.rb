@@ -13,7 +13,8 @@ class CLI
   end
 
   def call
-    outstream.puts messages.welcome   #I think we need to expand out the welcome message with instructions. Or just outstream.puts messages.instructions.
+    outstream.puts messages.welcome
+    outstream.puts messages.help
     until quit?
       @command = instream.gets.strip
       process_commands
